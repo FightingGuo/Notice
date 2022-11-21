@@ -1,12 +1,11 @@
-package com.ghc.springboot.utils;
+package com.ghc.springboot.notice.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.ghc.springboot.Notice;
-import com.ghc.springboot.constant.WeComConstant;
-import com.ghc.springboot.entity.GetAccessToken;
-import com.ghc.springboot.entity.Result;
-import com.ghc.springboot.entity.SendMsgDTO;
+import com.ghc.springboot.notice.Notice;
+import com.ghc.springboot.notice.wecom.constant.WeComConstant;
+import com.ghc.springboot.notice.wecom.entity.GetAccessToken;
+import com.ghc.springboot.notice.wecom.entity.Result;
+import com.ghc.springboot.notice.wecom.entity.SendMsgDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,28 +36,26 @@ public class WeComImpl implements Notice {
     /**
      * 发送消息的类型
      */
-    @Value("${notice.dingTalk.qywx.msgType:}")
+    @Value("${notice.qywx.msgType:}")
     private String msgType;
 
     /**
      * 获取企业微信的企业号
      */
-    @Value("${notice.dingTalk.qywx.corpId:}")
+    @Value("${notice.qywx.corpId:}")
     private static final String corpId = "xxx";
 
     /**
      * 获取企业应用的密钥
      */
-    @Value("${notice.dingTalk.qywx.corpSecret:}")
+    @Value("${notice.qywx.corpSecret:}")
     private static final String corpSecret="xxx" ;
 
     /**
      * 企业id
      */
-    @Value("${notice.dingTalk.qywx.agentId:}")
+    @Value("${notice.qywx.agentId:}")
     private String agentId;
-
-
 
     /**
      * 获取access_token
@@ -103,7 +100,7 @@ public class WeComImpl implements Notice {
     }
 
     @Override
-    public Result sendWeComMsg(Object noticeIn) {
+    public Result sendMsg(Object noticeIn) {
         SendMsgDTO.In in = JSONObject.parseObject(String.valueOf(noticeIn), SendMsgDTO.In.class);
 
         //从对象中提取凭证

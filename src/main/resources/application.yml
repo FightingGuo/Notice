@@ -1,7 +1,8 @@
 notice:
-  dingTalk:
     qywx:
       msgType: xxx
       corpId: xxx
       corpSecret: xxx
       agentId: xxx
+
+    dingTalk:

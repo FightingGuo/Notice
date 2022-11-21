@@ -1,4 +1,4 @@
-package com.ghc.springboot.constant;
+package com.ghc.springboot.notice.wecom.constant;
 
 /**
  * @author 郭昊晨

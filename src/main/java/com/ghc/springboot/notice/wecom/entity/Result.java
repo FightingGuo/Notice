@@ -1,4 +1,4 @@
-package com.ghc.springboot.entity;
+package com.ghc.springboot.notice.wecom.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

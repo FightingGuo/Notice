@@ -1,4 +1,4 @@
-package com.ghc.springboot;
+package com.ghc.springboot.notice;
 
 /**
  * @author 郭昊晨
@@ -6,9 +6,7 @@ package com.ghc.springboot;
  * 2022/11/17 - 22:44
  */
 
-import com.ghc.springboot.entity.Result;
-
-import java.util.Objects;
+import com.ghc.springboot.notice.wecom.entity.Result;
 
 /**
  * 消息推送接口
@@ -23,5 +21,5 @@ public interface Notice {
     /**
      * 发送消息
      */
-    Result sendWeComMsg(Object noticeIn);
+    Result sendMsg(Object noticeIn);
 }

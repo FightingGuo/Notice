@@ -1,4 +1,4 @@
-package com.ghc.springboot.entity;
+package com.ghc.springboot.notice.wecom.entity;
 
 /**
  * @author 郭昊晨
