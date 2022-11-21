@@ -20,7 +20,7 @@ public class GetAccessToken {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class In{
+    public static class Out{
         /**
          * 获取token
          */
@@ -30,5 +30,15 @@ public class GetAccessToken {
          * 过期时间
          */
         private String expireIn;
+
+        /**
+         * 返回码
+         */
+        private int errCode;
+
+        /**
+         * 对返回码的文本描述内容
+         */
+        private String errMsg;
     }
 }

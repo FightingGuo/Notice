@@ -83,7 +83,7 @@ public class SendMsgDTO {
         /**
          * 返回码
          */
-        private String errCode;
+        private int errCode;
 
         /**
          * 对返回码的文本描述内容

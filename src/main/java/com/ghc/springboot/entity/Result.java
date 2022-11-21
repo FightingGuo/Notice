@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Result {
     /**
-     * 错误信息
+     * 信息
      */
-    private String errMsg;
+    private String Msg;
 
     /**
      * 返回内容

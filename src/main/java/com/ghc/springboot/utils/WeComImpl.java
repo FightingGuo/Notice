@@ -3,11 +3,14 @@ package com.ghc.springboot.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ghc.springboot.Notice;
+import com.ghc.springboot.constant.WeComConstant;
 import com.ghc.springboot.entity.GetAccessToken;
 import com.ghc.springboot.entity.Result;
 import com.ghc.springboot.entity.SendMsgDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +22,7 @@ import java.util.HashMap;
  * @version 1.0
  * 2022/11/17 - 22:48
  */
+@Slf4j
 public class WeComImpl implements Notice {
 
 
@@ -47,11 +51,6 @@ public class WeComImpl implements Notice {
      */
     @Value("${notice.dingTalk.qywx.corpSecret:}")
     private static final String corpSecret="xxx" ;
-    /**
-     * 获取访问权限码URL
-     */
-    private static final  String ACCESS_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken";
-
 
     /**
      * 企业id
@@ -59,10 +58,6 @@ public class WeComImpl implements Notice {
     @Value("${notice.dingTalk.qywx.agentId:}")
     private String agentId;
 
-    /**
-     * 创建会话请求URL
-     */
-    private final static String CREATE_SESSION_URL = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=";
 
 
     /**
@@ -72,17 +67,38 @@ public class WeComImpl implements Notice {
     @Override
     public Result getAccessToken(){
         //访问微信服务器
-        String url = ACCESS_TOKEN_URL + "?corpid=" + corpId + "&corpsecret=" + corpSecret;
+        String url = WeComConstant.ACCESS_TOKEN_URL + "?corpid=" + corpId + "&corpsecret=" + corpSecret;
 
         Result result=new Result();
-        try {
-            GetAccessToken.In token=new GetAccessToken.In();
-            token = restTemplate.getForObject(url,GetAccessToken.In.class);
-            result.setContent(token.getAccessToken());
-        }catch (Exception e){
-            result.setErrMsg(e.getMessage());
-        }
-        //返回access_token码
+
+        do {
+            result.setResult(Boolean.TRUE);
+            result.setMsg("获取accessToken成功");
+            try {
+                ResponseEntity<GetAccessToken.Out> responseEntity = restTemplate.getForEntity(url, GetAccessToken.Out.class);
+                //服务器是否异常
+                if (responseEntity.getStatusCode()!=HttpStatus.OK) {
+                    result.setResult(Boolean.FALSE);
+                    result.setMsg(String.valueOf(responseEntity.getStatusCode()));
+                    break;
+                }
+                GetAccessToken.Out body = responseEntity.getBody();
+                //token获取是否异常
+                if (0!=body.getErrCode()){
+                    result.setResult(Boolean.FALSE);
+                    result.setMsg(body.getErrMsg());
+                    break;
+                }
+                //存入token
+                result.setContent(body.getAccessToken());
+            }catch (Exception e){
+                result.setResult(Boolean.FALSE);
+                result.setMsg(e.getMessage());
+                log.error(String.format(WeComConstant.GET_ACCESS_TOKEN_FAIL,e.getMessage()));
+            }
+
+        }while (false);
+
         return result;
     }
 
@@ -94,7 +110,7 @@ public class WeComImpl implements Notice {
         String ACCESS_TOKEN = (String) getAccessToken().getContent();
 
         //把拿到的授权token拼接到请求串
-        String url = CREATE_SESSION_URL + ACCESS_TOKEN;
+        String url = WeComConstant.CREATE_SESSION_URL + ACCESS_TOKEN;
 
         HashMap<String,Object> map=new HashMap<>();
         HashMap<String,String> contentMap=new HashMap<>();
@@ -109,28 +125,35 @@ public class WeComImpl implements Notice {
         map.put("safe",in.getSafe());
         map.put("agentid",agentId);
 
-
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Content-Type","application/json");
-//        HttpEntity<String> stringHttpEntity = new HttpEntity<>(JSON.toJSONString(map), headers);
-//        ResponseEntity<Result> resultEntity = restTemplate.exchange(url, HttpMethod.POST, stringHttpEntity, Result.class);
-
         Result result=new Result();
 
-        try {
-            ResponseEntity<SendMsgDTO.Out> resultEntity = restTemplate.postForEntity(url, map,SendMsgDTO.Out.class);
-            SendMsgDTO.Out body = resultEntity.getBody();
-            if (null!=body.getErrCode()){
-                //错误信息放入
-                result.setContent(body.getErrMsg());
-                result.setResult(Boolean.FALSE);
-            }
-            //如果没错，就返回true
+        do {
             result.setResult(Boolean.TRUE);
-        }catch (Exception e){
-            result.setResult(Boolean.FALSE);
-            result.setErrMsg(e.getMessage());
-        }
+            result.setMsg("发送信息成功");
+            try {
+                ResponseEntity<SendMsgDTO.Out> resultEntity = restTemplate.postForEntity(url, map,SendMsgDTO.Out.class);
+                //判断服务器返回的请求 200  500
+                if(resultEntity.getStatusCode()!= HttpStatus.OK){
+                    result.setResult(Boolean.FALSE);
+                    //错误信息放入result
+                    result.setMsg(String.valueOf(resultEntity.getStatusCode()));
+                    //返回结果
+                    break;
+                }
+                SendMsgDTO.Out body = resultEntity.getBody();
+                //下面是判断具体业务请求是否成功
+                if (0!=body.getErrCode()){
+                    //错误信息放入
+                    result.setContent(body.getErrMsg());
+                    result.setResult(Boolean.FALSE);
+                }
+            }catch (Exception e){
+                result.setResult(Boolean.FALSE);
+                result.setMsg(e.getMessage());
+                log.error(String.format(WeComConstant.SEND_WECOM_MSG_FAIL,e.getMessage()));
+            }
+        }while (false);
+
      return result;
     }
 }
