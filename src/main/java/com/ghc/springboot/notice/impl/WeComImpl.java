@@ -2,15 +2,17 @@ package com.ghc.springboot.notice.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ghc.springboot.notice.Notice;
+import com.ghc.springboot.notice.constant.ThirdConstant;
+import com.ghc.springboot.notice.entity.ThirdResult;
 import com.ghc.springboot.notice.wecom.constant.WeComConstant;
 import com.ghc.springboot.notice.wecom.entity.GetAccessToken;
-import com.ghc.springboot.notice.wecom.entity.Result;
 import com.ghc.springboot.notice.wecom.entity.SendMsgDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
@@ -22,6 +24,7 @@ import java.util.HashMap;
  * 2022/11/17 - 22:48
  */
 @Slf4j
+@Component(ThirdConstant.WE_COM_DING_TALK)
 public class WeComImpl implements Notice {
 
 
@@ -62,11 +65,11 @@ public class WeComImpl implements Notice {
      * @return
      */
     @Override
-    public Result getAccessToken(){
+    public ThirdResult getAccessToken(){
         //访问微信服务器
         String url = WeComConstant.ACCESS_TOKEN_URL + "?corpid=" + corpId + "&corpsecret=" + corpSecret;
 
-        Result result=new Result();
+        ThirdResult result=new ThirdResult();
 
         do {
             result.setResult(Boolean.TRUE);
@@ -91,7 +94,7 @@ public class WeComImpl implements Notice {
             }catch (Exception e){
                 result.setResult(Boolean.FALSE);
                 result.setMsg(e.getMessage());
-                log.error(String.format(WeComConstant.GET_ACCESS_TOKEN_FAIL,e.getMessage()));
+                log.error(String.format(ThirdConstant.GET_ACCESS_TOKEN_FAIL,e.getMessage()));
             }
 
         }while (false);
@@ -100,7 +103,7 @@ public class WeComImpl implements Notice {
     }
 
     @Override
-    public Result sendMsg(Object noticeIn) {
+    public ThirdResult sendMsg(Object noticeIn) {
         SendMsgDTO.In in = JSONObject.parseObject(String.valueOf(noticeIn), SendMsgDTO.In.class);
 
         //从对象中提取凭证
@@ -122,7 +125,7 @@ public class WeComImpl implements Notice {
         map.put("safe",in.getSafe());
         map.put("agentid",agentId);
 
-        Result result=new Result();
+        ThirdResult result=new ThirdResult();
 
         do {
             result.setResult(Boolean.TRUE);
@@ -147,7 +150,7 @@ public class WeComImpl implements Notice {
             }catch (Exception e){
                 result.setResult(Boolean.FALSE);
                 result.setMsg(e.getMessage());
-                log.error(String.format(WeComConstant.SEND_WECOM_MSG_FAIL,e.getMessage()));
+                log.error(String.format(ThirdConstant.SEND_MSG_FAIL,e.getMessage()));
             }
         }while (false);
 

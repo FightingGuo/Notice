@@ -1,4 +1,4 @@
-package com.ghc.springboot.notice.wecom.entity;
+package com.ghc.springboot.notice.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,14 +8,13 @@ import lombok.NoArgsConstructor;
 /**
  * @author 郭昊晨
  * @version 1.0
- * 2022/11/17 - 22:45
+ * 2022/11/23 - 20:55
  */
-
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Result {
+@AllArgsConstructor
+public class ThirdResult {
     /**
      * 信息
      */
@@ -24,7 +23,7 @@ public class Result {
     /**
      * 返回内容
      */
-    private String content;
+    private Object content;
 
     /**
      * 是否成功

@@ -6,7 +6,7 @@ package com.ghc.springboot.notice;
  * 2022/11/17 - 22:44
  */
 
-import com.ghc.springboot.notice.wecom.entity.Result;
+import com.ghc.springboot.notice.entity.ThirdResult;
 
 /**
  * 消息推送接口
@@ -16,10 +16,10 @@ public interface Notice {
     /**
      * 获取access_token
      */
-    Result getAccessToken();
+    ThirdResult getAccessToken();
 
     /**
      * 发送消息
      */
-    Result sendMsg(Object noticeIn);
+    ThirdResult sendMsg(Object noticeIn);
 }

@@ -6,3 +6,12 @@ notice:
       agentId: xxx
 
     dingTalk:
+      appKey: xxx
+      appSecret: xxx
+      messageId: xxx
+      cursor: xxx
+      size: xxx
+
+    feiShu:
+      appId: xxx
+      appSecret: xxx
