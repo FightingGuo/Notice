@@ -1,4 +1,4 @@
-package com.ghc.springboot.notice.dingTalk.entity.typeentity;
+package com.ghc.springboot.notice.dingTalk.entity;
 
 /**
  * @Date 2022/11/22 /9:26

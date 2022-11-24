@@ -1,4 +1,4 @@
-package com.ghc.springboot.notice.dingTalk.entity.typeentity;
+package com.ghc.springboot.notice.dingTalk.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

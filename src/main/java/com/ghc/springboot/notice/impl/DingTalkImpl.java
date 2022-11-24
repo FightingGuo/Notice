@@ -1,12 +1,14 @@
 package com.ghc.springboot.notice.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.ghc.springboot.notice.Notice;
 import com.ghc.springboot.notice.constant.ThirdConstant;
 import com.ghc.springboot.notice.dingTalk.constant.DingTalkConstant;
-import com.ghc.springboot.notice.dingTalk.entity.typeentity.GetAccessTokenDTO;
-import com.ghc.springboot.notice.dingTalk.entity.typeentity.SendCommonMsgDTO;
-import com.ghc.springboot.notice.dingTalk.entity.typeentity.SendMsgToB;
+import com.ghc.springboot.notice.dingTalk.entity.GetAccessTokenDTO;
+import com.ghc.springboot.notice.dingTalk.entity.SendCommonMsgDTO;
+import com.ghc.springboot.notice.dingTalk.entity.SendMsgToB;
+import com.ghc.springboot.notice.dingTalk.entity.SendTaskMsgDTO;
 import com.ghc.springboot.notice.entity.ThirdResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,7 +61,7 @@ public class DingTalkImpl implements Notice {
                 }
 
                 GetAccessTokenDTO.Out token = responseEntity.getBody();
-                if (new Integer(0) != token.getErrCode()){
+                if (!"ok".equals(token.getErrMsg())){
                     result.setResult(Boolean.FALSE);
                     result.setMsg(token.getErrMsg());
                     break;
@@ -80,31 +82,25 @@ public class DingTalkImpl implements Notice {
 
     @Override
     public ThirdResult sendMsg(Object noticeIn) {
-        SendCommonMsgDTO.In in = JSON.parseObject(String.valueOf(noticeIn), SendCommonMsgDTO.In.class);
+        SendTaskMsgDTO.In in = JSON.parseObject(String.valueOf(noticeIn), SendTaskMsgDTO.In.class);
 
         String accessToken = (String) getAccessToken().getContent();
 
-        String url = DingTalkConstant.SEND_COMMON_MSG_URL + accessToken;
-
-
-        HashMap<String,Object> reqMap = new HashMap<>();
-        reqMap.put("sender",in.getSender());
-        reqMap.put("cid",in.getCid());
-        reqMap.put("msg",in.getMsg());
+        String url = DingTalkConstant.SEND_TASK_MSG_URL + accessToken;
 
         ThirdResult result=new ThirdResult();
         do {
             result.setResult(Boolean.TRUE);
             result.setMsg("消息发送成功");
             try {
-                ResponseEntity<SendMsgToB.Out> responseEntity = restTemplate.postForEntity(url, reqMap, SendMsgToB.Out.class);
+                ResponseEntity<SendTaskMsgDTO.Out> responseEntity = restTemplate.postForEntity(url, JSONObject.toJSONString(in), SendTaskMsgDTO.Out.class);
                 if (responseEntity.getStatusCode()!= HttpStatus.OK){
                     result.setResult(Boolean.FALSE);
                     result.setMsg(String.valueOf(responseEntity.getStatusCode()));
                     break;
                 }
-                SendMsgToB.Out token = responseEntity.getBody();
-                if (new Integer(0) != token.getErrCode()){
+                SendTaskMsgDTO.Out token = responseEntity.getBody();
+                if (!"ok".equals(token.getErrMsg())){
                     result.setResult(Boolean.FALSE);
                     result.setMsg(token.getErrMsg());
                     break;

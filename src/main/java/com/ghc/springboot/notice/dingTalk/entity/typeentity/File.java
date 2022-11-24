@@ -1,26 +1,27 @@
-package com.ghc.springboot.notice.dingTalk.entity;
+package com.ghc.springboot.notice.dingTalk.entity.typeentity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @Date 2022/11/22 /11:06
+ * @Date 2022/11/22 /11:21
  * @Author guohc
  * @Description
  */
 
 /**
- * 文本消息实体
+ * 文件实体
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Text {
+public class File {
     /**
-     * 文本内容
+     * 媒体文件id
      */
-    private String content;
+    private String mediaId;
 
 }

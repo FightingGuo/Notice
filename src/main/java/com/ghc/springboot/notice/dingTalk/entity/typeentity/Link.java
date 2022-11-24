@@ -1,4 +1,4 @@
-package com.ghc.springboot.notice.dingTalk.entity;
+package com.ghc.springboot.notice.dingTalk.entity.typeentity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,12 +21,12 @@ public class Link {
     /**
      * 消息点击链接地址，当发送消息为小程序时支持小程序跳转链接
      */
-    private String messageUrl;
+    private String message_url;
 
     /**
      * 企业内部应用通过上传媒体文件接口获取
      */
-    private String picUrl;
+    private String pic_url;
 
     /**
      * 消息标题
@@ -36,5 +36,5 @@ public class Link {
     /**
      * 消息描述
      */
-    private String text;
+    private Text text;
 }

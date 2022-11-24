@@ -1,4 +1,4 @@
-package com.ghc.springboot.notice.dingTalk.entity;
+package com.ghc.springboot.notice.dingTalk.entity.typeentity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,36 +28,36 @@ public class Msg {
     /**
      * 文本类型
      */
-    private String text;
+    private Text text;
 
     /**
      * 图片类型
      */
-    private String image;
+    private Image image;
 
     /**
      * 链接类型
      */
-    private String link;
+    private Link link;
 
     /**
      * 文件类型
      */
-    private String file;
+    private File file;
 
     /**
      * markDown格式
      */
-    private String markDown;
+    private MarkDown markdown;
 
     /**
      * OA类型
      */
-    private String OA;
+    private OA oa;
 
     /**
      * 音频类型
      */
-    private String voice;
+    private Voice voice;
 
 }
